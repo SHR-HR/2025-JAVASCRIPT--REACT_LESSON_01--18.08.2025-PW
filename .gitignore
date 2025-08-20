@@ -1,0 +1,29 @@
+# ЛОГИ И ФАЙЛЫ ОТЛАДКИ
+logs           # Папка с логами
+*.log          # Все файлы с расширением .log
+npm-debug.log* # Логи отладки npm
+yarn-debug.log* # Логи отладки Yarn
+yarn-error.log* # Логи ошибок Yarn
+pnpm-debug.log* # Логи отладки pnpm
+lerna-debug.log* # Логи отладки Lerna
+
+# СБОРКИ И ЗАВИСИМОСТИ
+node_modules   # Папка с зависимостями npm (не коммитить!)
+dist           # Папка production-сборки (генерируется автоматически)
+dist-ssr       # Папка SSR-сборки (если используется)
+*.local        # Локальные конфигурационные файлы
+
+# ФАЙлы РЕДАКТОРОВ И IDE
+.vscode/*      # Все файлы настроек VS Code
+!.vscode/extensions.json # Исключение: файл рекомендованных расширений можно коммитить
+.idea          # Папка настроек JetBrains IDE (WebStorm, IntelliJ)
+.DS_Store      # Файлы метаданных macOS
+*.suo          # Файлы настроек Visual Studio
+*.ntvs*        # Файлы NTVS (Node.js Tools for Visual Studio)
+*.njsproj      # Файлы проектов Node.js для Visual Studio
+*.sln          # Файлы решений Visual Studio
+*.sw?          # Файлы swap (временные файлы редакторов)
+
+
+
+

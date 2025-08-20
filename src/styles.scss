@@ -1,0 +1,284 @@
+// Импорт функции color из Sass для работы с цветами
+@use "sass:color";
+
+/* ПАЛИТРА ЦВЕТОВ И БАЗОВЫЕ ТОКЕНЫ ДИЗАЙН-СИСТЕМЫ */
+$bg: #0d0f12;          // Основной цвет фона приложения: очень темный серый
+$panel: #161a20;       // Цвет панелей и карточек: темный серый
+$border: #2a2f37;      // Цвет границ: средне-темный серый
+$text: #e6e9ee;        // Основной цвет текста: светло-серый
+$muted: #98a2b3;       // Вторичный цвет текста: серо-голубой (для второстепенной информации)
+
+$primary: #4f7fff;     // Основной акцентный цвет: ярко-синий
+$danger: #e5484d;      // Цвет для опасных действий: красный
+
+/* БАЗОВЫЕ СТИЛИ И СБРОС */
+* { box-sizing: border-box; } // Устанавливаем box-sizing для всех элементов
+html, body, #root { height: 100%; } // Растягиваем корневые элементы на всю высоту
+body {
+  margin: 0; // Убираем внешние отступы
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; // Стек шрифтов
+  background: $bg; // Устанавливаем цвет фона
+  color: $text; // Устанавливаем цвет текста
+}
+
+/* СТИЛИ СТРАНИЦЫ */
+.page {
+  // Стили для шапки страницы
+  &__header {
+    max-width: 1260px; // Максимальная ширина контента
+    margin: 24px auto 12px; // Внешние отступы: 24px сверху, auto по бокам, 12px снизу
+    padding: 0 16px; // Внутренние отступы по бокам
+    h1 { 
+      margin: 0 0 6px; // Отступы для заголовка: 0 сверху/по бокам, 6px снизу
+      font-size: 28px; // Размер шрифта заголовка
+    }
+    .muted { 
+      color: $muted; // Цвет второстепенного текста
+      margin: 0 0 12px; // Отступы: 0 сверху/по бокам, 12px снизу
+    }
+  }
+}
+
+/* ПАНЕЛЬ ИНСТРУМЕНТОВ */
+.toolbar {
+  display: flex; // Flexbox layout
+  gap: 12px; // Расстояние между элементами
+  // Стили поля поиска
+  .search {
+    width: 360px; // Ширина поля поиска
+    max-width: 100%; // Ограничение максимальной ширины
+    background: #0f1319; // Темный фон поля
+    color: $text; // Цвет текста
+    border: 1px solid $border; // Граница
+    border-radius: 10px; // Скругление углов
+    padding: 10px 12px; // Внутренние отступы
+    outline: none; // Убираем стандартный outline
+    &:focus { 
+      border-color: $primary; // Цвет границы при фокусе: синий
+    }
+  }
+}
+
+/* СЕТКА КАРТОЧЕК */
+.board {
+  max-width: 1260px; // Максимальная ширина сетки
+  margin: 0 auto 24px; // Центрирование и отступ снизу
+  padding: 16px; // Внутренние отступы
+  border: 3px solid $border; // Граница вокруг всей сетки
+  border-radius: 16px; // Скругление углов
+  display: grid; // Grid layout
+  gap: 20px; // Расстояние между карточками
+
+  // Модификатор для 5 колонок на десктопе
+  &--cols5 { 
+    grid-template-columns: repeat(5, minmax(200px, 1fr)); // 5 колонок, минимальная ширина 200px
+  }
+  
+  /* АДАПТИВНАЯ ВЕРСТКА */
+  @media (max-width: 1200px) { grid-template-columns: repeat(4, 1fr); } // 4 колонки на экранах до 1200px
+  @media (max-width: 980px)  { grid-template-columns: repeat(3, 1fr); } // 3 колонки на экранах до 980px
+  @media (max-width: 720px)  { grid-template-columns: repeat(2, 1fr); } // 2 колонки на экранах до 720px
+  @media (max-width: 480px)  { grid-template-columns: 1fr; } // 1 колонка на экранах до 480px
+}
+
+/* КАРТОЧКА ОБЪЯВЛЕНИЯ */
+.card {
+  display: flex; // Flexbox layout
+  flex-direction: column; // Вертикальное направление
+  background: $panel; // Цвет фона карточки
+  border: 2px solid $border; // Граница карточки
+  border-radius: 14px; // Скругление углов
+  overflow: hidden; // Скрываем выходящее за границы содержимое
+  min-height: 280px; // Минимальная высота карточки
+
+  // Модификатор для режима редактирования
+  &--editing { 
+    outline: 2px dashed $primary; // Пунктирная обводка синим цветом
+  }
+  
+  // Модификатор для кнопки создания новой карточки
+  &--new {
+    align-items: center; // Центрирование по горизонтали
+    justify-content: center; // Центрирование по вертикали
+    cursor: pointer; // Курсор-указатель
+    font-weight: 600; // Полужирный шрифт
+    font-size: 16px; // Размер шрифта
+    color: $muted; // Цвет текста
+    background: transparent; // Прозрачный фон
+    &:hover { 
+      border-color: $primary; // Цвет границы при наведении
+      color: $text; // Цвет текста при наведении
+    }
+  }
+  
+  // Модификатор для формы создания новой карточки
+  &--newForm { 
+    background: rgba($panel, 0.9); // Полупрозрачный фон
+  }
+}
+
+/* ОБЛАСТЬ ИЗОБРАЖЕНИЯ В КАРТОЧКЕ */
+.card__imageWrap {
+  aspect-ratio: 4/3; // Соотношение сторон 4:3
+  background: #0b0d11; // Темный фон для области изображения
+  border-bottom: 2px solid $border; // Граница снизу
+  img { 
+    width: 100%; // Ширина 100% родителя
+    height: 100%; // Высота 100% родителя
+    object-fit: cover; // Обрезка изображения с сохранением пропорций
+    display: block; // Блочное отображение
+  }
+  
+  // Модификатор для области перетаскивания
+  &--drop { 
+    outline: 2px dashed rgba($primary, .6); // Пунктирная обводка с прозрачностью
+  }
+}
+
+/* ОБЛАСТЬ ПЕРЕТАСКИВАНИЯ ДЛЯ НОВОЙ КАРТОЧКИ */
+.dropzone {
+  aspect-ratio: 5/2.2; // Соотношение сторон ~5:2.2
+  background: #0b0d11; // Темный фон
+  border-bottom: 2px solid $border; // Граница снизу
+  outline: 2px dashed rgba($primary, .6); // Пунктирная обводка
+  img { 
+    width: 100%; // Ширина 100%
+    height: 100%; // Высота 100%
+    object-fit: cover; // Обрезка с сохранением пропорций
+    display: block; // Блочное отображение
+  }
+}
+
+/* ТЕЛО КАРТОЧКИ */
+.card__body {
+  padding: 12px 12px 0; // Внутренние отступы: 12px сверху/по бокам, 0 снизу
+  .card__title { 
+    margin: 0 0 6px; // Отступы заголовка
+    font-size: 18px; // Размер шрифта заголовка
+    line-height: 1.2; // Межстрочный интервал
+  }
+  .card__desc { 
+    margin: 0 0 10px; // Отступы описания
+    color: $muted; // Цвет текста
+    min-height: 40px; // Минимальная высота для сохранения layout
+  }
+  .card__meta { 
+    margin: 6px 0 0; // Отступы мета-информации
+    .price { 
+      font-weight: 700; // Жирный шрифт для цены
+    }
+  }
+}
+
+/* КНОПКИ ДЕЙСТВИЙ В КАРТОЧКЕ */
+.card__actions {
+  display: flex; // Flexbox layout
+  gap: 8px; // Расстояние между кнопками
+  padding: 12px; // Внутренние отступы
+  margin-top: auto; // Прижимаем к низу карточки
+  .btn { 
+    flex: 1; // Равномерное распределение пространства
+  }
+}
+
+/* ПОЛЯ ВВОДА */
+.field {
+  display: grid; // Grid layout
+  gap: 6px; // Расстояние между элементами
+  margin-bottom: 10px; // Отступ снизу
+  span { 
+    font-size: 12px; // Мелкий шрифт для label
+    color: $muted; // Цвет текста
+  }
+  input, textarea {
+    background: #0f1319; // Темный фон
+    color: $text; // Цвет текста
+    border: 1px solid $border; // Граница
+    border-radius: 10px; // Скругление углов
+    padding: 10px 12px; // Внутренние отступы
+    outline: none; // Убираем стандартный outline
+    &:focus { 
+      border-color: $primary; // Цвет границы при фокусе
+    }
+  }
+}
+
+/* КНОПКИ */
+.btn {
+  appearance: none; // Сбрасываем стандартные стили браузера
+  border: 1px solid $border; // Граница
+  background: #0f1319; // Темный фон
+  color: $text; // Цвет текста
+  padding: 10px 12px; // Внутренние отступы
+  border-radius: 10px; // Скругление углов
+  cursor: pointer; // Курсор-указатель
+  transition: 0.15s ease; // Плавный переход
+  &:hover {
+    border-color: color.adjust($border, $lightness: 10%); // Осветляем границу при наведении
+    transform: translateY(-1px); // Легкое поднятие кнопки
+  }
+
+  &:disabled { 
+    opacity: .5; // Полупрозрачность для отключенной кнопки
+    cursor: not-allowed; // Курсор "не разрешено"
+    transform: none; // Отключаем трансформацию
+  }
+  
+  // Модификатор для основной кнопки
+  &--primary { 
+    background: $primary; // Синий фон
+    border-color: $primary; // Синяя граница
+    color: white; // Белый текст
+  }
+  
+  // Модификатор для опасной кнопки
+  &--danger  { 
+    background: $danger; // Красный фон
+    border-color: $danger; // Красная граница
+    color: white; // Белый текст
+  }
+}
+
+/* ПАГИНАЦИЯ */
+.pager {
+  max-width: 1260px; // Максимальная ширина
+  margin: 0 auto 40px; // Центрирование и отступ снизу
+  padding: 0 16px; // Внутренние отступы по бокам
+  display: flex; // Flexbox layout
+  align-items: center; // Вертикальное выравнивание по центру
+  justify-content: space-between; // Распределение пространства между элементами
+  gap: 12px; // Расстояние между элементами
+
+  .pager__pages {
+    display: flex; // Flexbox layout
+    gap: 8px; // Расстояние между кнопками
+    flex-wrap: wrap; // Перенос на новую строку при необходимости
+    justify-content: center; // Центрирование по горизонтали
+    flex: 1; // Занимает все доступное пространство
+  }
+  .pager__btn {
+    border: 1px solid $border; // Граница
+    background: #0f1319; // Темный фон
+    color: $text; // Цвет текста
+    padding: 8px 12px; // Внутренние отступы
+    border-radius: 10px; // Скругление углов
+    cursor: pointer; // Курсор-указатель
+    &.is-active { 
+      background: $primary; // Синий фон для активной страницы
+      border-color: $primary; // Синяя граница
+      color: #fff; // Белый текст
+    }
+  }
+}
+
+/* ВТОРОСТЕПЕННЫЙ ТЕКСТ */
+.muted { 
+  color: $muted; // Серо-голубой цвет
+}
+
+
+
+
+
+
+
